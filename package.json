@@ -1,0 +1,57 @@
+{
+  "name": "@bahmanbinary/rnpicker",
+  "keywords": [
+    "React Native",
+    "Picker",
+    "React Native Picker",
+    "Select",
+    "Selector",
+    "React Native Selector",
+    "List",
+    "React Native List"
+  ],
+  "repository": {
+    "url": "https://github.com/BahmanBinary/rnpicker"
+  },
+  "homepage": "https://github.com/BahmanBinary/rnpicker",
+  "version": "1.0.0",
+  "scripts": {
+    "android": "react-native run-android",
+    "start": "react-native start",
+    "test": "jest",
+    "storybook": "start-storybook -p 7007"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-native": "^0.60.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/runtime": "^7.3.1",
+    "@react-native-community/eslint-config": "^0.0.3",
+    "@storybook/addon-actions": "^5.3.13",
+    "@storybook/addon-links": "^5.3.13",
+    "@storybook/addons": "^5.3.13",
+    "@storybook/cli": "^5.3.13",
+    "@storybook/react-native": "^5.3.13",
+    "@storybook/react-native-server": "^5.3.13",
+    "babel-jest": "^24.1.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.8.0",
+    "jest": "^24.1.0",
+    "metro-react-native-babel-preset": "^0.54.1",
+    "node": "^10.19.0",
+    "react": "16.8.6",
+    "react-dom": "^16.8.6",
+    "react-native": "0.60.0",
+    "react-test-renderer": "16.8.6"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "dependencies": {
+    "react-native-elements": "^1.2.7",
+    "react-native-responsive-screen": "^1.4.0",
+    "react-native-vector-icons": "^6.6.0"
+  }
+}
