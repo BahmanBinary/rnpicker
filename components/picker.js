@@ -6,11 +6,11 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
-  Animated
+  Animated,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Icon } from "react-native-elements";
 
@@ -22,7 +22,7 @@ export default class Picker extends PureComponent {
       containerHeight: null,
       dropDown: false,
       selectedItem: null,
-      selectedIndex: null
+      selectedIndex: null,
     };
 
     this.list = createRef();
@@ -36,7 +36,7 @@ export default class Picker extends PureComponent {
     const {
       data = [],
       rtl = false,
-      itemComponent: Item = props => (
+      itemComponent: Item = (props) => (
         <Text
           style={[
             {
@@ -44,9 +44,9 @@ export default class Picker extends PureComponent {
               textAlignVertical: "center",
               paddingHorizontal: wp(3),
               paddingVertical: wp(2),
-              overflow: "hidden"
+              overflow: "hidden",
             },
-            props.style
+            props.style,
           ]}
           numberOfLines={1}
         >
@@ -73,14 +73,14 @@ export default class Picker extends PureComponent {
       itemStyle,
       iconColor = "black",
       iconSize = wp(8),
-      iconStyle
+      iconStyle,
     } = this.props;
 
     const {
       containerHeight,
       dropDown,
       selectedItem,
-      selectedIndex
+      selectedIndex,
     } = this.state;
 
     return (
@@ -91,29 +91,30 @@ export default class Picker extends PureComponent {
           onPress={() => {
             this.setState(
               {
-                dropDown: true
+                dropDown: true,
               },
               () => {
                 Animated.timing(this.containerHeight, {
                   toValue: containerHeight * 5,
-                  duration: 50
+                  duration: 50,
+                  useNativeDriver: true,
                 }).start();
                 if (this.state.dropDown && this.state.selectedIndex)
                   this.list.current.scrollToIndex({
                     index: this.state.selectedIndex,
-                    animated: false
+                    animated: false,
                   });
               }
             );
           }}
         >
           <View
-            onLayout={event => {
+            onLayout={(event) => {
               this.containerHeight = new Animated.Value(
                 event.nativeEvent.layout.height
               );
               this.setState({
-                containerHeight: event.nativeEvent.layout.height
+                containerHeight: event.nativeEvent.layout.height,
               });
             }}
             style={{
@@ -122,7 +123,7 @@ export default class Picker extends PureComponent {
               flexDirection: rtl ? "row-reverse" : "row",
               flexWrap: "wrap",
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <Item
@@ -130,7 +131,7 @@ export default class Picker extends PureComponent {
                 styles.placeholder,
                 selectedItem
                   ? itemStyle
-                  : [styles.placeholderColor, placeholderStyle]
+                  : [styles.placeholderColor, placeholderStyle],
               ]}
               rtl={rtl}
             >
@@ -147,8 +148,8 @@ export default class Picker extends PureComponent {
           style={[
             styles.animatedView,
             {
-              height: dropDown ? this.containerHeight : 0
-            }
+              height: dropDown ? this.containerHeight : 0,
+            },
           ]}
         >
           <FlatList
@@ -157,7 +158,7 @@ export default class Picker extends PureComponent {
               return {
                 length: containerHeight,
                 offset: containerHeight * index,
-                index
+                index,
               };
             }}
             data={data}
@@ -165,7 +166,7 @@ export default class Picker extends PureComponent {
               if (!selectedItem && item.selected)
                 this.setState({
                   selectedItem: item,
-                  selectedIndex: index
+                  selectedIndex: index,
                 });
 
               return (
@@ -174,12 +175,13 @@ export default class Picker extends PureComponent {
                     if (onSelect) onSelect(item, index);
                     Animated.timing(this.containerHeight, {
                       toValue: containerHeight,
-                      duration: 50
+                      duration: 50,
+                      useNativeDriver: true,
                     }).start(() => {
                       this.setState({
                         dropDown: false,
                         selectedItem: item,
-                        selectedIndex: index
+                        selectedIndex: index,
                       });
                     });
                   }}
@@ -187,7 +189,7 @@ export default class Picker extends PureComponent {
                   <View
                     style={{
                       backgroundColor:
-                        selectedIndex == index ? "#00000011" : "transparent"
+                        selectedIndex == index ? "#00000011" : "transparent",
                     }}
                   >
                     <Item style={itemStyle} rtl={rtl}>
@@ -197,7 +199,7 @@ export default class Picker extends PureComponent {
                 </TouchableNativeFeedback>
               );
             }}
-            keyExtractor={item => item.label + item.value}
+            keyExtractor={(item) => item.label + item.value}
           />
         </Animated.View>
       </View>
@@ -207,13 +209,13 @@ export default class Picker extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%"
+    width: "100%",
   },
   containerOverride: {
-    height: undefined
+    height: undefined,
   },
   placeholder: {
-    flex: 1
+    flex: 1,
   },
   placeholderColor: { color: "#888" },
   animatedView: {
@@ -221,6 +223,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     backgroundColor: "white",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
