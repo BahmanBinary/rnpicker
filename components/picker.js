@@ -97,7 +97,7 @@ export default class Picker extends PureComponent {
                 Animated.timing(this.containerHeight, {
                   toValue: containerHeight * 5,
                   duration: 50,
-                  useNativeDriver: true,
+                  useNativeDriver: false,
                 }).start();
                 if (this.state.dropDown && this.state.selectedIndex)
                   this.list.current.scrollToIndex({
@@ -176,7 +176,7 @@ export default class Picker extends PureComponent {
                     Animated.timing(this.containerHeight, {
                       toValue: containerHeight,
                       duration: 50,
-                      useNativeDriver: true,
+                      useNativeDriver: false,
                     }).start(() => {
                       this.setState({
                         dropDown: false,
