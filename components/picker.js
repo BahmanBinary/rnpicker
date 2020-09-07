@@ -224,5 +224,6 @@ const styles = StyleSheet.create({
     left: 0,
     backgroundColor: "white",
     width: "100%",
+    zIndex: 1,
   },
 });

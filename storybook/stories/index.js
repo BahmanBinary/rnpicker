@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Icon } from "react-native-elements";
 
@@ -11,16 +11,23 @@ import { storiesOf } from "@storybook/react-native";
 import Picker from "./picker";
 
 storiesOf("Picker", module)
-  .addDecorator(story => (
+  .addDecorator((story) => (
     <View
       style={{
         flex: 1,
         alignItems: "center",
         paddingHorizontal: 10,
-        paddingVertical: 50
+        paddingVertical: 50,
       }}
     >
       {story()}
+      <View
+        style={{
+          width: "100%",
+          height: 100,
+          backgroundColor: "red",
+        }}
+      />
     </View>
   ))
   .add("Default", () => (
@@ -35,7 +42,7 @@ storiesOf("Picker", module)
         { label: "Option 7", value: 7 },
         { label: "Option 8", value: 8 },
         { label: "Option 9", value: 9 },
-        { label: "Option 10", value: 10 }
+        { label: "Option 10", value: 10 },
       ]}
     />
   ))
@@ -51,7 +58,7 @@ storiesOf("Picker", module)
         { label: "Option 7", value: 7 },
         { label: "Option 8", value: 8 },
         { label: "Option 9", value: 9 },
-        { label: "Option 10", value: 10 }
+        { label: "Option 10", value: 10 },
       ]}
     />
   ))
@@ -67,7 +74,7 @@ storiesOf("Picker", module)
         { label: "Option 7", value: 7 },
         { label: "Option 8", value: 8 },
         { label: "Option 9", value: 9 },
-        { label: "Option 10", value: 10 }
+        { label: "Option 10", value: 10 },
       ]}
       rtl={true}
     />
@@ -84,9 +91,9 @@ storiesOf("Picker", module)
         { label: "Option 7", value: 7 },
         { label: "Option 8", value: 8 },
         { label: "Option 9", value: 9 },
-        { label: "Option 10", value: 10 }
+        { label: "Option 10", value: 10 },
       ]}
-      itemComponent={props => (
+      itemComponent={(props) => (
         <Text
           style={[
             {
@@ -95,9 +102,9 @@ storiesOf("Picker", module)
               paddingHorizontal: wp(3),
               paddingVertical: wp(2),
               overflow: "hidden",
-              backgroundColor: "#ff000011"
+              backgroundColor: "#ff000011",
             },
-            props.style
+            props.style,
           ]}
           numberOfLines={1}
         >
@@ -118,7 +125,7 @@ storiesOf("Picker", module)
         { label: "Option 7", value: 7 },
         { label: "Option 8", value: 8 },
         { label: "Option 9", value: 9 },
-        { label: "Option 10", value: 10 }
+        { label: "Option 10", value: 10 },
       ]}
       iconComponent={() => <Icon name="sentiment-satisfied" size={wp(8)} />}
     />
