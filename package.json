@@ -15,7 +15,7 @@
     "url": "https://github.com/BahmanBinary/rnpicker"
   },
   "homepage": "https://github.com/BahmanBinary/rnpicker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "android": "react-native run-android",
     "start": "react-native start",
