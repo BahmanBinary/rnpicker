@@ -1,4 +1,4 @@
-import React, { Component, PureComponent, createRef } from "react";
+import React, { PureComponent, createRef } from "react";
 import {
   View,
   FlatList,
@@ -7,6 +7,9 @@ import {
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
   Animated,
+  Modal,
+  UIManager,
+  findNodeHandle,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -23,13 +26,35 @@ export default class Picker extends PureComponent {
       dropDown: false,
       selectedItem: null,
       selectedIndex: null,
+      buttonMeasurements: null,
     };
 
     this.list = createRef();
+    this.button = createRef();
   }
 
   dismissPicker() {
     this.setState({ dropDown: false });
+  }
+
+  _measure = () => {
+    UIManager.measure(
+      findNodeHandle(this.button.current),
+      (x, y, width, height, pageX, pageY) => {
+        this.setState({
+          buttonMeasurements: {
+            width,
+            height,
+            x: pageX,
+            y: pageY,
+          },
+        });
+      }
+    );
+  };
+
+  componentDidMount() {
+    setTimeout(this._measure);
   }
 
   render() {
@@ -81,6 +106,7 @@ export default class Picker extends PureComponent {
       dropDown,
       selectedItem,
       selectedIndex,
+      buttonMeasurements,
     } = this.state;
 
     return (
@@ -88,6 +114,7 @@ export default class Picker extends PureComponent {
         style={[styles.container, containerStyle, styles.containerOverride]}
       >
         <TouchableWithoutFeedback
+          ref={this.button}
           onPress={() => {
             this.setState(
               {
@@ -99,11 +126,12 @@ export default class Picker extends PureComponent {
                   duration: 50,
                   useNativeDriver: false,
                 }).start();
-                if (this.state.dropDown && this.state.selectedIndex)
+                if (this.state.dropDown && this.state.selectedIndex) {
                   this.list.current.scrollToIndex({
                     index: this.state.selectedIndex,
                     animated: false,
                   });
+                }
               }
             );
           }}
@@ -144,64 +172,69 @@ export default class Picker extends PureComponent {
             />
           </View>
         </TouchableWithoutFeedback>
-        <Animated.View
-          style={[
-            styles.animatedView,
-            {
-              height: dropDown ? this.containerHeight : 0,
-            },
-          ]}
-        >
-          <FlatList
-            ref={this.list}
-            getItemLayout={(data, index) => {
-              return {
-                length: containerHeight,
-                offset: containerHeight * index,
-                index,
-              };
-            }}
-            data={data}
-            renderItem={({ item, index }) => {
-              if (!selectedItem && item.selected)
-                this.setState({
-                  selectedItem: item,
-                  selectedIndex: index,
-                });
+        <Modal visible={this.state.dropDown} transparent={true}>
+          <Animated.View
+            style={[
+              styles.animatedView,
+              {
+                top: buttonMeasurements ? buttonMeasurements.y : 0,
+                left: buttonMeasurements ? buttonMeasurements.x : 0,
+                height: dropDown ? this.containerHeight : 0,
+                // display: buttonMeasurements ? "flex" : "none",
+              },
+            ]}
+          >
+            <FlatList
+              ref={this.list}
+              getItemLayout={(data, index) => {
+                return {
+                  length: containerHeight,
+                  offset: containerHeight * index,
+                  index,
+                };
+              }}
+              data={data}
+              renderItem={({ item, index }) => {
+                if (!selectedItem && item.selected)
+                  this.setState({
+                    selectedItem: item,
+                    selectedIndex: index,
+                  });
 
-              return (
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    if (onSelect) onSelect(item, index);
-                    Animated.timing(this.containerHeight, {
-                      toValue: containerHeight,
-                      duration: 50,
-                      useNativeDriver: false,
-                    }).start(() => {
-                      this.setState({
-                        dropDown: false,
-                        selectedItem: item,
-                        selectedIndex: index,
+                return (
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      if (onSelect) onSelect(item, index);
+                      Animated.timing(this.containerHeight, {
+                        toValue: containerHeight,
+                        duration: 50,
+                        useNativeDriver: false,
+                      }).start(() => {
+                        this.setState({
+                          dropDown: false,
+                          selectedItem: item,
+                          selectedIndex: index,
+                        });
                       });
-                    });
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor:
-                        selectedIndex == index ? "#00000011" : "transparent",
                     }}
                   >
-                    <Item style={itemStyle} rtl={rtl}>
-                      {item.label}
-                    </Item>
-                  </View>
-                </TouchableNativeFeedback>
-              );
-            }}
-            keyExtractor={(item) => item.label + item.value}
-          />
-        </Animated.View>
+                    <View
+                      style={{
+                        backgroundColor:
+                          selectedIndex == index ? "#00000011" : "transparent",
+                      }}
+                    >
+                      <Item style={itemStyle} rtl={rtl}>
+                        {item.label}
+                      </Item>
+                    </View>
+                  </TouchableNativeFeedback>
+                );
+              }}
+              keyExtractor={(item) => item.label + item.value}
+            />
+          </Animated.View>
+        </Modal>
       </View>
     );
   }
@@ -220,10 +253,7 @@ const styles = StyleSheet.create({
   placeholderColor: { color: "#888" },
   animatedView: {
     position: "absolute",
-    top: 0,
-    left: 0,
     backgroundColor: "white",
     width: "100%",
-    zIndex: 1,
   },
 });

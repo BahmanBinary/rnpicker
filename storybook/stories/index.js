@@ -20,7 +20,14 @@ storiesOf("Picker", module)
         paddingVertical: 50,
       }}
     >
-      {story()}
+      <View
+        style={{
+          height: 50,
+          overflow: "hidden",
+        }}
+      >
+        {story()}
+      </View>
       <View
         style={{
           width: "100%",
