@@ -21,6 +21,7 @@ export default class Picker extends PureComponent {
   constructor(props) {
     super(props);
 
+    const { data } = props;
     this.state = {
       containerHeight: null,
       dropDown: false,
@@ -28,6 +29,14 @@ export default class Picker extends PureComponent {
       selectedIndex: null,
       buttonMeasurements: null,
     };
+
+    for (let index in data) {
+      if (data[index].selected) {
+        this.state.selectedIndex = parseInt(index, 10);
+        this.state.selectedItem = data[index];
+        break;
+      }
+    }
 
     this.list = createRef();
     this.button = createRef();
@@ -47,25 +56,26 @@ export default class Picker extends PureComponent {
     });
   };
 
-  _measure = () => {
+  _measure = (callback) => {
     UIManager.measure(
       findNodeHandle(this.button.current),
       (x, y, width, height, pageX, pageY) => {
-        this.setState({
-          buttonMeasurements: {
-            width,
-            height,
-            x: pageX,
-            y: pageY,
+        this.setState(
+          {
+            buttonMeasurements: {
+              width,
+              height,
+              x: pageX,
+              y: pageY,
+            },
           },
-        });
+          () => {
+            if (callback) callback();
+          }
+        );
       }
     );
   };
-
-  componentDidMount() {
-    setTimeout(this._measure, 100);
-  }
 
   componentDidMount() {
     setTimeout(this._measure, 100);
@@ -130,24 +140,27 @@ export default class Picker extends PureComponent {
         <TouchableWithoutFeedback
           ref={this.button}
           onPress={() => {
-            this.setState(
-              {
-                dropDown: true,
-              },
-              () => {
-                Animated.timing(this.containerHeight, {
-                  toValue: containerHeight * 5,
-                  duration: 50,
-                  useNativeDriver: false,
-                }).start();
-                if (this.state.dropDown && this.state.selectedIndex) {
-                  this.list.current.scrollToIndex({
-                    index: this.state.selectedIndex,
-                    animated: false,
+            this._measure(() => {
+              this.setState(
+                {
+                  dropDown: true,
+                },
+                () => {
+                  Animated.timing(this.containerHeight, {
+                    toValue: containerHeight * 5,
+                    duration: 50,
+                    useNativeDriver: false,
+                  }).start(() => {
+                    if (this.state.dropDown && this.state.selectedIndex) {
+                      this.list.current.scrollToIndex({
+                        index: this.state.selectedIndex,
+                        animated: true,
+                      });
+                    }
                   });
                 }
-              }
-            );
+              );
+            });
           }}
         >
           <View
@@ -161,7 +174,7 @@ export default class Picker extends PureComponent {
             }}
             style={{
               width: "100%",
-              backgroundColor: "white",
+              backgroundColor: "yellow",
               flexDirection: rtl ? "row-reverse" : "row",
               flexWrap: "wrap",
               justifyContent: "center",
@@ -209,7 +222,6 @@ export default class Picker extends PureComponent {
                     left: buttonMeasurements ? buttonMeasurements.x : 0,
                     height: dropDown ? this.containerHeight : 0,
                     width: buttonMeasurements ? buttonMeasurements.width : 0,
-                    // display: buttonMeasurements ? "flex" : "none",
                   },
                 ]}
               >
@@ -224,12 +236,6 @@ export default class Picker extends PureComponent {
                   }}
                   data={data}
                   renderItem={({ item, index }) => {
-                    if (!selectedItem && item.selected)
-                      this.setState({
-                        selectedItem: item,
-                        selectedIndex: index,
-                      });
-
                     return (
                       <TouchableNativeFeedback
                         onPress={() => {
@@ -282,6 +288,5 @@ const styles = StyleSheet.create({
   animatedView: {
     position: "absolute",
     backgroundColor: "white",
-    width: "100%",
   },
 });
