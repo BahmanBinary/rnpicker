@@ -174,7 +174,7 @@ export default class Picker extends PureComponent {
             }}
             style={{
               width: "100%",
-              backgroundColor: "yellow",
+              backgroundColor: "white",
               flexDirection: rtl ? "row-reverse" : "row",
               flexWrap: "wrap",
               justifyContent: "center",
